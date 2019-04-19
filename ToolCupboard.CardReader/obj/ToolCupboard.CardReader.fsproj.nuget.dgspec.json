@@ -1,0 +1,57 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/administrator/backup/fsharp/tool_cupboard/ToolCupboard.CardReader/ToolCupboard.CardReader.fsproj": {}
+  },
+  "projects": {
+    "/home/administrator/backup/fsharp/tool_cupboard/ToolCupboard.CardReader/ToolCupboard.CardReader.fsproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/administrator/backup/fsharp/tool_cupboard/ToolCupboard.CardReader/ToolCupboard.CardReader.fsproj",
+        "projectName": "ToolCupboard.CardReader",
+        "projectPath": "/home/administrator/backup/fsharp/tool_cupboard/ToolCupboard.CardReader/ToolCupboard.CardReader.fsproj",
+        "packagesPath": "/home/administrator/.nuget/packages/",
+        "outputPath": "/home/administrator/backup/fsharp/tool_cupboard/ToolCupboard.CardReader/obj/",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "/usr/share/dotnet/sdk/NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "/home/administrator/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.0": {
+            "projectReferences": {}
+          }
+        }
+      },
+      "frameworks": {
+        "netstandard2.0": {
+          "dependencies": {
+            "FSharp.Core": {
+              "target": "Package",
+              "version": "[4.6.2, )"
+            },
+            "NETStandard.Library": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.0.3, )",
+              "autoReferenced": true
+            }
+          },
+          "imports": [
+            "net461"
+          ],
+          "assetTargetFallback": true,
+          "warn": true
+        }
+      }
+    }
+  }
+}

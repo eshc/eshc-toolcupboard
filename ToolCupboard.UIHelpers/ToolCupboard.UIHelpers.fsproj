@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup> 
+  
+
+  <ItemGroup>
+    <AvaloniaResource Include="**\*.xaml">
+      <SubType>Designer</SubType>
+    </AvaloniaResource>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="0.8.0" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.8.0" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="0.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="AppBuilderExtensions.fs" />
+    <Compile Include="VisualTreeExtensions.fs" />
+    <Compile Include="ViewModels/ToolViewModel.fs" />
+    <Compile Include="ViewModels/UserProfileViewModel.fs" />
+    <Compile Include="Controls/PopupControl.fs" />
+    <Compile Include="Controls/ToolWindow.fs" />
+    <Compile Include="Views/LockedWindow.xaml.fs"></Compile>
+    <Compile Include="Views/UserProfileWindow.xaml.fs"></Compile>
+    <Compile Include="Library.fs" />
+  </ItemGroup>
+</Project>

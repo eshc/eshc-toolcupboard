@@ -1,0 +1,21 @@
+<ui:ToolWindow xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:ToolCupboard.UIHelpers.ViewModels;assembly=ToolCupboard.UIHelpers"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="clr-namespace:ToolCupboard.UIHelpers.Controls;assembly=ToolCupboard.UIHelpers"
+        mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="800"
+        x:Class="ToolCupboard.UIHelpers.Views.LockedWindow"
+        Title="Tool Cupboard - Locked">
+
+    <Grid>
+        <StackPanel VerticalAlignment="Center">
+            <TextBlock Classes="h1" HorizontalAlignment="Center" Text="Locked" />
+            <TextBlock Classes="h1" HorizontalAlignment="Center" Text="Tap card to enter" />
+        </StackPanel>
+
+        <StackPanel Name="overlay" Classes="overlay">
+        </StackPanel>
+    </Grid>
+</ui:ToolWindow>
+
