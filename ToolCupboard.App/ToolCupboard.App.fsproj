@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <AvaloniaResource Include="**\*.xaml">
+      <SubType>Designer</SubType>
+    </AvaloniaResource>
+    <AvaloniaResource Include="Assets\*"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="App.xaml.fs" />
+    <Compile Include="Views/MainWindow.xaml.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="0.8.0" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.8.0" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="0.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ToolCupboard.Common\ToolCupboard.Common.fsproj" />
+    <ProjectReference Include="..\ToolCupboard.CardReader\ToolCupboard.CardReader.fsproj" />
+    <ProjectReference Include="..\ToolCupboard.UIHelpers\ToolCupboard.UIHelpers.fsproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "ToolCupboard.UIHelpers"
+		},
+		{
+			"path": "ToolCupboard.UIHelpers.Test"
+		},
+		{
+			"path": "ToolCupboard.CardReader"
+		},
+		{
+			"path": "ToolCupboard.Common"
+		},
+		{
+			"path": "ToolCupboard.App"
+		}
+	],
+	"settings": {}
+}

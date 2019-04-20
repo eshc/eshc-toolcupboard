@@ -1,5 +1,5 @@
-﻿namespace ToolCupboard.CardReader
+﻿namespace ToolCupboard.Common
 
-module Library =
+module Say =
     let hello name =
         printfn "Hello %s" name

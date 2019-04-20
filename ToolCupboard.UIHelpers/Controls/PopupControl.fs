@@ -6,7 +6,7 @@ open Avalonia
 open Avalonia.Controls
 open Avalonia.Markup.Xaml
 open System.Threading.Tasks
-open UIHelpers.VisualTreeExtensions
+open ToolCupboard.UIHelpers.VisualTreeExtensions
 
 type PopupControl() as this =
     inherit ContentControl()

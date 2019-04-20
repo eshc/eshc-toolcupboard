@@ -8,31 +8,28 @@ open Avalonia.Markup.Xaml
 open ToolCupboard.UIHelpers.Controls
 open ToolCupboard.UIHelpers.ViewModels
 open ToolCupboard.UIHelpers.Views
+open ToolCupboard.UIHelpers.Pages
 
 type MainWindow () as this =
     inherit Window()
 
-    let lastWindow = ref None
+    let lastWindow = PageWindow(Width = 480.0, Height = 800.0)
 
     do this.InitializeComponent()
     member this.InitializeComponent() =
         AvaloniaXamlLoader.Load(this)
-    
+        lastWindow.InitializeComponent()
+        lastWindow.Show()
 
     member this.UserProfileClick(sender: obj, ev : RoutedEventArgs) =
         let tools = AvaloniaList([ToolViewModel(Name = "Some Tool")])
         let vm = UserProfileViewModel(Name = "Rudi", Tools = tools)
-        let wnd = UserProfileWindow(DataContext = vm, Width = 480.0, Height = 800.0)
-        lastWindow := Some (wnd :> ToolWindow)
-        wnd.Show()
+        let page = UserProfilePage(DataContext = vm)
+        lastWindow.Navigate(page)
 
     member this.LockedClick(sender: obj, ev : RoutedEventArgs) =
-        let wnd = LockedWindow(Width = 480.0, Height = 800.0)
-        lastWindow := Some (wnd :> ToolWindow)
-        wnd.Show()
+        let page = LockedPage()
+        lastWindow.Navigate(page)
 
     member this.SendMessageClick(sender: obj, ev : RoutedEventArgs) =
-        !lastWindow
-        |> Option.iter (fun wnd ->
-            wnd.PopupMessageBox("hello world")
-        ) 
+        lastWindow.PopupMessageBox("Hello world!")

@@ -1,12 +1,12 @@
-namespace ToolCupboard.UIHelpers.Views
+namespace ToolCupboard.UIHelpers.Pages
 
 open Avalonia
 open Avalonia.Controls
 open Avalonia.Markup.Xaml
 open ToolCupboard.UIHelpers.Controls
 
-type LockedWindow () as this =
-    inherit ToolWindow()
+type LockedPage() as this =
+    inherit Page()
 
     do this.InitializeComponent()
 

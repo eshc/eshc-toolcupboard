@@ -1,5 +1,9 @@
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:ui="clr-namespace:ToolCupboard.UIHelpers.Controls;assembly=ToolCupboard.UIHelpers">
+        xmlns:ui="clr-namespace:ToolCupboard.UIHelpers.Controls;assembly=ToolCupboard.UIHelpers"
+        xmlns:uiv="clr-namespace:ToolCupboard.UIHelpers.Views;assembly=ToolCupboard.UIHelpers">
+    <Style Selector="TextBlock.center">
+        <Setter Property="HorizontalAlignment" Value="Center" />
+    </Style>
     <Style Selector="TextBlock.h1">
         <Setter Property="FontSize" Value="36" />
     </Style>
@@ -8,10 +12,6 @@
     </Style>
     <Style Selector="TextBlock.h3">
         <Setter Property="FontSize" Value="18" />
-    </Style>
-    <Style Selector="StackPanel.overlay">
-        <Setter Property="Margin" Value="15" />
-        <Setter Property="VerticalAlignment" Value="Bottom" />
     </Style>
     <Style Selector="ui|PopupControl">
         <Setter Property="Background" Value="Green" />
@@ -31,6 +31,33 @@
                                       Margin="{TemplateBinding Padding}"
                                       HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                       VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    <Style Selector="TextBlock.footer">
+        <Setter Property="Foreground" Value="#606060" />
+        <Setter Property="VerticalAlignment" Value="Bottom" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="Margin" Value="5" />
+        <Setter Property="FontStyle" Value="Italic" />
+    </Style>
+    <Style Selector="uiv|PageWindow">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid Background="{TemplateBinding Background}">
+                    <AdornerDecorator>
+                        <ContentPresenter 
+                            Name="PART_ContentPresenter"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            Content="{TemplateBinding Content}"
+                            Margin="{TemplateBinding Padding}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </AdornerDecorator>
+                    <TextBlock Classes="footer" Text="Tool Cupboard - 2019" />
+                    <StackPanel Name="overlay" VerticalAlignment="Bottom" Margin="15">
+                    </StackPanel>
                 </Grid>
             </ControlTemplate>
         </Setter>

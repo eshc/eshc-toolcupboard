@@ -5,6 +5,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="PCSC" Version="4.0.3" />
+    <PackageReference Include="PCSC.Iso7816" Version="4.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ToolCupboard.Common\ToolCupboard.Common.fsproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="CardEventArgs.fs" />
+    <Compile Include="ICardManager.fs" />
+    <Compile Include="debug/CardManager.fs"></Compile>
+    <Compile Include="pcsc/MifareCard.fs"></Compile>
+    <Compile Include="pcsc/CardManager.fs"></Compile>
     <Compile Include="Library.fs" />
   </ItemGroup>
 
