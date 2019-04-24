@@ -21,7 +21,6 @@
   <ItemGroup>
     <Compile Include="Format.fs" />
     <Compile Include="App.xaml.fs" />
-    <Compile Include="ViewModels\ViewModelBase.fs" />
     <Compile Include="ViewModels\MainWindowViewModel.fs" />
     <Compile Include="ViewLocator.fs" />
     <Compile Include="Views\MainWindow.xaml.fs" />

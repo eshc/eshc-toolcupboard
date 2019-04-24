@@ -6,18 +6,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="clr-namespace:ToolCupboard.UIHelpers.Controls;assembly=ToolCupboard.UIHelpers"
     mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="800"
-    x:Class="ToolCupboard.UIHelpers.Pages.LockedPage"
-    Title="Tool Cupboard - Locked">
+    x:Class="ToolCupboard.App.Pages.LockedPage">
 
-    <Grid>
-        <StackPanel VerticalAlignment="Center">
-            <TextBlock Classes="h1 center" Text="Locked" />
-            <TextBlock Classes="h1 center" Text="-" />
-            <TextBlock Classes="h1 center" Text="&lt;Tap card to enter&gt;" />
-        </StackPanel>
-
-        <StackPanel Name="overlay" Classes="overlay">
-        </StackPanel>
-    </Grid>
+    <StackPanel VerticalAlignment="Center">
+        <TextBlock Classes="h1 center" Text="Locked" />
+        <TextBlock Classes="h1 center" Text="-" />
+        <TextBlock Classes="h1 center" Text="&lt;Tap card to enter&gt;" />
+    </StackPanel>
 </ui:Page>
 

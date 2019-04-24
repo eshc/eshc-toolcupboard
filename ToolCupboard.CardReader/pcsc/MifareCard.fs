@@ -5,6 +5,9 @@ open PCSC.Iso7816
 open ToolCupboard.Common
 
 type MifareCard(reader : IIsoReader) =
+    let cardInserted = new Event<_>()
+    let cardRemoved = new Event<_>()
+
     member this.FormatID(data) =
         Format.show Format.ppHexList (data |> Array.toList)
 

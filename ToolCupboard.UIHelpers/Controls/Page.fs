@@ -4,10 +4,9 @@ open Avalonia
 open Avalonia.Controls
 open Avalonia.VisualTree
 open ToolCupboard.UIHelpers.VisualTreeExtensions
-open ToolCupboard.UIHelpers.Views
 
 type Page() =
-    inherit ContentControl()
+    inherit UserControl()
 
     static member val TitleProperty = Window.TitleProperty.AddOwner<Page>()
 
@@ -15,9 +14,10 @@ type Page() =
         with get () = this.GetValue(Page.TitleProperty)
         and set v = this.SetValue(Page.TitleProperty, v)
 
-    member this.PageWindow with get () = this.Ancestor<PageWindow>()
+    member this.PageControl with get () = this.Ancestor<PageControl>()
 
-    member this.PageNavigation with get () = this.PageWindow.PageNavigation
+    member this.PageNavigation with get () = this.PageControl.PageNavigation
 
     member this.Navigate(page) =
         this.PageNavigation.Navigate(page)
+

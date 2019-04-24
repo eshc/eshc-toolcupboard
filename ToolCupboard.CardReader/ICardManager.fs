@@ -5,5 +5,8 @@ open ToolCupboard.CardReader
 type ICardManager =
     abstract member Initialize: unit -> unit
 
-    abstract member CardInserted: Event<obj * CardEventArgs>
-    abstract member CardRemoved: Event<obj * CardEventArgs>
+    [<CLIEvent>]
+    abstract member CardInserted: IEvent<obj * CardEventArgs>
+
+    [<CLIEvent>]
+    abstract member CardRemoved: IEvent<obj * CardEventArgs>

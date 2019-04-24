@@ -28,9 +28,5 @@
             <Button Content="Locked Window" Click="LockedClick" />
             <Button Content="Send Message" Click="SendMessageClick" />
         </StackPanel>
-
-        <ui:PopupControl Delay="10000">
-            <TextBlock Background="Blue" Height="50" Text="some text" />
-        </ui:PopupControl>
     </Grid>
 </Window>

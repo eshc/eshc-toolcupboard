@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Provider.fs" />
+    <Compile Include="AccessLog.fs" />
+    <Compile Include="Users.fsi" />
+    <Compile Include="Users.fs" />
+    <Compile Include="Tools.fsi" />
+    <Compile Include="Tools.fs" />
+    <Compile Include="Library.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Npgsql" Version="4.0.6" />
+    <PackageReference Include="SQLProvider" Version="1.1.62" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.110.0" />
+    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="4.5.0" />
+    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.2" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.2" />
+  </ItemGroup>
+</Project>

@@ -1,4 +1,4 @@
-﻿namespace ToolCupboard.UIHelpers.Test.ViewModels
+﻿namespace ToolCupboard.UIHelpers.ViewModels
 
 open System
 open System.Collections.Generic

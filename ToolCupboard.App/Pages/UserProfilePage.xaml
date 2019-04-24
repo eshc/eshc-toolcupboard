@@ -5,9 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="clr-namespace:ToolCupboard.UIHelpers.Controls;assembly=ToolCupboard.UIHelpers"
-    xmlns:uip="clr-namespace:ToolCupboard.UIHelpers.Pages;assembly=ToolCupboard.UIHelpers"
     mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="800"
-    x:Class="ToolCupboard.UIHelpers.Pages.UserProfilePage"
+    x:Class="ToolCupboard.UIHelpers.App.UserProfilePage"
     Title="Tool Cupboard - User Profile">
 
     <Design.DataContext>

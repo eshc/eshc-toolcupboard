@@ -1,4 +1,4 @@
-namespace ToolCupboard.UIHelpers.Pages
+namespace ToolCupboard.App.Pages
 
 open Avalonia
 open Avalonia.Controls

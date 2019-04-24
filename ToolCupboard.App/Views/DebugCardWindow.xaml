@@ -1,0 +1,26 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="clr-namespace:ToolCupboard.UIHelpers.Controls;assembly=ToolCupboard.UIHelpers"
+        xmlns:uip="clr-namespace:ToolCupboard.UIHelpers.Pages;assembly=ToolCupboard.UIHelpers"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="ToolCupboard.App.Views.DebugCardWindow"
+        Title="Tool Cupboard - Debug Card">
+        <StackPanel>
+          <TextBlock Classes="h2" Text="Users:" />
+          <StackPanel Orientation="Vertical">
+            <Button Content="1" Click="UserClick" />
+            <Button Content="2" Click="UserClick" />
+            <Button Content="3" Click="UserClick" />
+          </StackPanel>
+          
+          <TextBlock Classes="h2" Text="Tools:" />
+          <StackPanel Orientation="Vertical">
+            <Button Content="1" Click="ToolClick" />
+            <Button Content="2" Click="ToolClick" />
+            <Button Content="3" Click="ToolClick" />
+          </StackPanel>
+        </StackPanel>
+
+</Window>

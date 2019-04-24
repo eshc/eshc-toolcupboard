@@ -19,17 +19,37 @@ type PopupControl() as this =
         with get () = this.GetValue(PopupControl.DelayProperty)
         and set v = this.SetValue(PopupControl.DelayProperty, v)
 
+    static member val AutoFadeProperty = AvaloniaProperty.Register<PopupControl, bool>("AutoFade")
+
+    member this.AutoFade
+        with get () = this.GetValue(PopupControl.AutoFadeProperty)
+        and set v = this.SetValue(PopupControl.AutoFadeProperty, v)
+
     member this.FadeAsync() =
         async {
             do! Async.Sleep(this.Delay)
             let panel = this.Ancestor<Panel>()
-            panel.Children.Remove(this) |> ignore
+            Option.ofObj panel |> Option.iter (fun panel -> 
+                panel.Children.Remove(this) |> ignore
+            )
         }
 
-    member this.OnInitialized(sender, args) =
+    member this.StartFade() =
         this.FadeAsync() |> Async.StartImmediate
+
+    member this.OnInitialized(sender, args) =
+        if this.AutoFade then
+            this.StartFade()
 
     override this.OnAttachedToVisualTree(b) =
         base.OnAttachedToVisualTree(b)
+
+    member this.SetText(text) =
+        match this.Content with
+        | :? TextBlock as tb -> tb.Text <- text
+        | _ -> 
+            let content = TextBlock(Classes=Classes.Parse("h2"), Text="text")
+            this.Content <- content
+
 
 

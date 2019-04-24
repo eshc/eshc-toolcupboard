@@ -5,6 +5,9 @@ open PCSC.Iso7816
 open ToolCupboard.CardReader
 
 type CardManager() =
+    let cardInserted = new Event<_>()
+    let cardRemoved = new Event<_>()
+
     member val private Context : ISCardContext = null with get,set
 
     member val private Monitors = [] with get,set
@@ -12,8 +15,11 @@ type CardManager() =
     member val private LastCardId = None with get,set
 
     interface ICardManager with
-        member val CardInserted = new Event<_>()
-        member val CardRemoved = new Event<_>()
+        [<CLIEvent>]
+        member this.CardInserted = cardInserted.Publish
+
+        [<CLIEvent>]
+        member this.CardRemoved = cardRemoved.Publish
 
         member this.Initialize() = 
             this.Context <- ContextFactory.Instance.Establish(SCardScope.System)
@@ -35,13 +41,13 @@ type CardManager() =
             new IsoReader(this.Context,  args.ReaderName, SCardShareMode.Shared, SCardProtocol.Any, false)
         let card = MifareCard(isoReader)
         let cardid = card.GetID()
-        (this :> ICardManager).CardInserted.Trigger(this :> obj, CardEventArgs(CardId = cardid))
+        cardInserted.Trigger(this :> obj, CardEventArgs(CardId = cardid))
         this.LastCardId <- Some cardid
 
     member this.OnCardRemoved(args : Monitoring.CardEventArgs) =
         this.LastCardId
         |> Option.iter (fun cardid -> 
-            (this :> ICardManager).CardRemoved.Trigger(this :> obj, CardEventArgs(CardId = cardid))
+            cardRemoved.Trigger(this :> obj, CardEventArgs(CardId = cardid))
         )
 
 

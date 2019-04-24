@@ -19,6 +19,7 @@
         <Setter Property="Margin" Value="5" />
         <Setter Property="Padding" Value="10" />
         <Setter Property="Delay" Value="3000" />
+        <Setter Property="AutoFade" Value="true" />
         <Setter Property="Template">
             <ControlTemplate>
                 <Grid 
@@ -42,19 +43,21 @@
         <Setter Property="Margin" Value="5" />
         <Setter Property="FontStyle" Value="Italic" />
     </Style>
-    <Style Selector="uiv|PageWindow">
+    <Style Selector="ui|PageControl">
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
         <Setter Property="Template">
             <ControlTemplate>
                 <Grid Background="{TemplateBinding Background}">
-                    <AdornerDecorator>
-                        <ContentPresenter 
-                            Name="PART_ContentPresenter"
-                            ContentTemplate="{TemplateBinding ContentTemplate}"
-                            Content="{TemplateBinding Content}"
-                            Margin="{TemplateBinding Padding}"
-                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
-                    </AdornerDecorator>
+                    <ContentPresenter 
+                        Name="PART_ContentPresenter"
+                        ContentTemplate="{TemplateBinding ContentTemplate}"
+                        Content="{TemplateBinding Content}"
+                        Margin="{TemplateBinding Padding}"
+                        HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
                     <TextBlock Classes="footer" Text="Tool Cupboard - 2019" />
                     <StackPanel Name="overlay" VerticalAlignment="Bottom" Margin="15">
                     </StackPanel>

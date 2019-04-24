@@ -14,8 +14,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="ICardHandler.fs" />
+    <Compile Include="Manager.fs" />
+    <Compile Include="Views/DebugCardWindow.xaml.fsi" />
+    <Compile Include="Views/DebugCardWindow.xaml.fs" />
     <Compile Include="App.xaml.fs" />
-    <Compile Include="Views/MainWindow.xaml.fs" />
+    <Compile Include="ViewLocator.fs" />
+    <Compile Include="Pages/UserProfilePage.xaml.fs" />
+    <Compile Include="Pages/LockedPage.xaml.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
@@ -23,11 +29,18 @@
     <PackageReference Include="Avalonia" Version="0.8.0" />
     <PackageReference Include="Avalonia.Desktop" Version="0.8.0" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.8.0" />
+    <PackageReference Include="Npgsql" Version="4.0.6" />
+    <PackageReference Include="SQLProvider" Version="1.1.62" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.110.0" />
+    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="4.5.0" />
+    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.2" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ToolCupboard.Common\ToolCupboard.Common.fsproj" />
     <ProjectReference Include="..\ToolCupboard.CardReader\ToolCupboard.CardReader.fsproj" />
+    <ProjectReference Include="..\ToolCupboard.Database\ToolCupboard.Database.fsproj" />
     <ProjectReference Include="..\ToolCupboard.UIHelpers\ToolCupboard.UIHelpers.fsproj" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,13 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="clr-namespace:ToolCupboard.UIHelpers.Controls;assembly=ToolCupboard.UIHelpers"
+        xmlns:uip="clr-namespace:ToolCupboard.UIHelpers.Pages;assembly=ToolCupboard.UIHelpers"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="ToolCupboard.UIHelpers.Views.PageWindow"
+        Title="Tool Cupboard - App">
+
+    <ui:PageControl Name="PageControl">
+    </ui:PageControl>
+</Window>
