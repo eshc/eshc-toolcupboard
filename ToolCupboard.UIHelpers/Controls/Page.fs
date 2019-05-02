@@ -16,8 +16,11 @@ type Page() =
 
     member this.PageControl with get () = this.Ancestor<PageControl>()
 
-    member this.PageNavigation with get () = this.PageControl.PageNavigation
+    member this.PageNavigation 
+        with get () = 
+            this.PageControl 
+            |> Option.map (fun (v : PageControl) -> v.PageNavigation)
 
     member this.Navigate(page) =
-        this.PageNavigation.Navigate(page)
+        Option.iter (fun (v : PageNavigation) -> v.Navigate(page)) this.PageNavigation
 

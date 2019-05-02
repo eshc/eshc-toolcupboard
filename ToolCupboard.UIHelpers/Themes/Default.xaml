@@ -11,7 +11,7 @@
         <Setter Property="FontSize" Value="24" />
     </Style>
     <Style Selector="TextBlock.h3">
-        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontSize" Value="20" />
     </Style>
     <Style Selector="ui|PopupControl">
         <Setter Property="Background" Value="Green" />
@@ -19,7 +19,7 @@
         <Setter Property="Margin" Value="5" />
         <Setter Property="Padding" Value="10" />
         <Setter Property="Delay" Value="3000" />
-        <Setter Property="AutoFade" Value="true" />
+        <Setter Property="AutoFade" Value="false" />
         <Setter Property="Template">
             <ControlTemplate>
                 <Grid 

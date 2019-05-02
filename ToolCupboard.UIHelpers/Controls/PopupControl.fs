@@ -1,11 +1,7 @@
 namespace ToolCupboard.UIHelpers.Controls
 
-open System
-open System.Threading
 open Avalonia
 open Avalonia.Controls
-open Avalonia.Markup.Xaml
-open System.Threading.Tasks
 open ToolCupboard.UIHelpers.VisualTreeExtensions
 
 type PopupControl() as this =
@@ -29,10 +25,13 @@ type PopupControl() as this =
         async {
             do! Async.Sleep(this.Delay)
             let panel = this.Ancestor<Panel>()
-            Option.ofObj panel |> Option.iter (fun panel -> 
+            panel |> Option.iter (fun panel -> 
                 panel.Children.Remove(this) |> ignore
             )
         }
+
+    member this.SetError() =
+        ()
 
     member this.StartFade() =
         this.FadeAsync() |> Async.StartImmediate
@@ -50,6 +49,3 @@ type PopupControl() as this =
         | _ -> 
             let content = TextBlock(Classes=Classes.Parse("h2"), Text="text")
             this.Content <- content
-
-
-

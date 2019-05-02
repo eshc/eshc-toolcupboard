@@ -5,6 +5,7 @@
         xmlns:ui="clr-namespace:ToolCupboard.UIHelpers.Controls;assembly=ToolCupboard.UIHelpers"
         xmlns:uip="clr-namespace:ToolCupboard.UIHelpers.Pages;assembly=ToolCupboard.UIHelpers"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        Height="200" Width="200"
         x:Class="ToolCupboard.App.Views.DebugCardWindow"
         Title="Tool Cupboard - Debug Card">
         <StackPanel>

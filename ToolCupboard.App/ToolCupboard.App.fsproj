@@ -20,7 +20,10 @@
     <Compile Include="Views/DebugCardWindow.xaml.fs" />
     <Compile Include="App.xaml.fs" />
     <Compile Include="ViewLocator.fs" />
+    <Compile Include="ViewModels/ToolViewModel.fs" />
+    <Compile Include="ViewModels/UserProfileViewModel.fs" />
     <Compile Include="Pages/UserProfilePage.xaml.fs" />
+    <Compile Include="Pages/RegisterToolPage.xaml.fs" />
     <Compile Include="Pages/LockedPage.xaml.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

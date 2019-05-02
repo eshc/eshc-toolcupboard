@@ -5,7 +5,9 @@ open Avalonia.Controls
 type PageNavigation() =
     member val Pages = [] with get, set
 
-    member this.Navigate(cc : ContentControl, page) =
+    member this.Navigate(cc : ContentControl, page, popLast) =
+        if popLast then
+            this.Pages <- List.tail this.Pages
         this.Pages <- page :: this.Pages
         cc.Content <- page
 

@@ -6,6 +6,13 @@ CREATE DATABASE tool_catalogue
   LC_CTYPE = 'en_US.UTF-8'
   CONNECTION LIMIT = -1;
 
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
+
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO public;
+
+
 CREATE TABLE public.access_log
   (
     access_id bigserial PRIMARY KEY NOT NULL,
@@ -20,6 +27,7 @@ CREATE TABLE public.users
     user_id bigserial PRIMARY KEY NOT NULL,
     login text NOT NULL,
     "name" text NOT NULL,
+    "email" text NOT NULL,
     added timestamp NOT NULL
   );
 ALTER TABLE public.users
@@ -40,7 +48,8 @@ CREATE TABLE public.tools
     tool_id bigserial PRIMARY KEY NOT NULL,
     "name" text NOT NULL,
     description text NOT NULl,
-    location text NOT NULL
+    location text NOT NULL,
+    added timestamp NOT NULL
   );
 ALTER TABLE public.tools
   OWNER TO tool_catalogue;
@@ -52,7 +61,7 @@ CREATE TABLE public.tool_cards
     tool_id bigint NOT NULL REFERENCES tools(tool_id),
     added timestamp NOT NULL
   );
-ALTER TABLE public.tools
+ALTER TABLE public.tool_cards
   OWNER TO tool_catalogue;
 
 CREATE TABLE public.tool_checkout
@@ -71,9 +80,8 @@ CREATE TABLE public.user_log
     card_id text NOT NULL REFERENCES user_cards(card_id),
     date timestamp NOT NULL
   );
-ALTER TABLE public.tools
+ALTER TABLE public.user_log
   OWNER TO tool_catalogue;
-
 
 CREATE TABLE public.tool_log
   (
@@ -85,5 +93,8 @@ CREATE TABLE public.tool_log
     tool_card_id text NOT NULL REFERENCES tool_cards(card_id),
     check_in boolean NOT NULl
   );
-ALTER TABLE public.access_log
+ALTER TABLE public.tool_log
   OWNER TO tool_catalogue;
+
+
+

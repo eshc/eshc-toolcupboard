@@ -8,8 +8,10 @@ module VisualTreeExtensions =
   type IVisual with
       member this.Ancestor<'a when 'a :> IVisual>() =
           let parent = this.GetVisualParent()
-          if parent :? 'a
-          then parent :?> 'a
+          if isNull parent
+          then None
+          elif parent :? 'a
+          then parent :?> 'a |> Some
           else parent.Ancestor<'a>()
 
       member this.BreadthFirstFind<'a when 'a :> IVisual>(f) =

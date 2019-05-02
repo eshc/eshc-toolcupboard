@@ -22,13 +22,16 @@
     <Compile Include="AppBuilderExtensions.fs" />
     <Compile Include="VisualTreeExtensions.fs" />
     <Compile Include="ViewModels/ViewModelBase.fs" />
-    <Compile Include="ViewModels/ToolViewModel.fs" />
-    <Compile Include="ViewModels/UserProfileViewModel.fs" />
+    <Compile Include="Controls/Gravatar.fs" />
     <Compile Include="Controls/PopupControl.fs" />
     <Compile Include="Controls/PageNavigation.fs" />
     <Compile Include="Controls/PageControl.fs" />
     <Compile Include="Controls/Page.fs" />
     <Compile Include="Views/PageWindow.xaml.fs" />
     <Compile Include="Library.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ToolCupboard.Common\ToolCupboard.Common.fsproj" />
   </ItemGroup>
 </Project>

@@ -37,18 +37,24 @@ type CardManager() =
                     mon)
 
     member this.OnCardInserted(args : Monitoring.CardEventArgs) = 
-        use isoReader = 
-            new IsoReader(this.Context,  args.ReaderName, SCardShareMode.Shared, SCardProtocol.Any, false)
-        let card = MifareCard(isoReader)
-        let cardid = card.GetID()
-        cardInserted.Trigger(this :> obj, CardEventArgs(CardId = cardid))
-        this.LastCardId <- Some cardid
+        try
+            use isoReader = 
+                new IsoReader(this.Context,  args.ReaderName, SCardShareMode.Shared, SCardProtocol.Any, false)
+            let card = MifareCard(isoReader)
+            let cardid = card.GetID()
+            cardInserted.Trigger(this :> obj, CardEventArgs(CardId = cardid))
+            this.LastCardId <- Some cardid
+        with _ ->
+            ()
 
     member this.OnCardRemoved(args : Monitoring.CardEventArgs) =
-        this.LastCardId
-        |> Option.iter (fun cardid -> 
-            cardRemoved.Trigger(this :> obj, CardEventArgs(CardId = cardid))
-        )
+        try
+            this.LastCardId
+            |> Option.iter (fun cardid -> 
+                cardRemoved.Trigger(this :> obj, CardEventArgs(CardId = cardid))
+            )
+        with _ ->
+            ()
 
 
 

@@ -7,7 +7,19 @@ open ToolCupboard.Database.Provider
 
 type Tool = Db.dataContext.``public.toolsEntity``
 type ToolCheckout = Db.dataContext.``public.tool_checkoutEntity``
-type CheckInOutResult = CheckedIn | CheckedOut
+type BorrowOrReturnResult = Borrowed | Returned 
+
+let RegisterToolAsync ctxt cardId = 
+    let ctxt = Option.defaultWith (Db.GetDataContext) ctxt
+    let tool = ctxt.Public.Tools.Create("Unknown Tool", "Unknown Location", "Unknown Tool")
+    async {
+        do! ctxt.SubmitUpdatesAsync()
+        tool.Name <- sprintf "Unknown Tool %d" tool.ToolId
+        let card = ctxt.Public.ToolCards.Create(DateTime.Now, "Unknown Card", tool.ToolId)
+        card.CardId <- cardId
+        do! ctxt.SubmitUpdatesAsync()
+        return tool
+    }
 
 let LookupToolAsync ctxt cardId =
     let ctxt = Option.defaultWith (Db.GetDataContext) ctxt
@@ -18,7 +30,7 @@ let LookupToolAsync ctxt cardId =
         select tool
     } |> Seq.tryHeadAsync
 
-let CheckInOrOutToolAsync ctxt (tool:Tool) (user:User) userCardId toolCardId =
+let BorrowOrReturnToolAsync ctxt (tool:Tool) (user:User) toolCardId userCardId =
     let ctxt = Option.defaultWith (Db.GetDataContext) ctxt
     async {
         let! old = 
@@ -33,11 +45,11 @@ let CheckInOrOutToolAsync ctxt (tool:Tool) (user:User) userCardId toolCardId =
                 let tc = ctxt.Public.ToolCheckout.Create(DateTime.Now, user.UserId)
                 tc.ToolId <- tool.ToolId
                 ctxt.Public.ToolLog.Create(true, DateTime.Now, toolCardId, tool.ToolId, userCardId, user.UserId) |> ignore
-                CheckedIn 
+                Borrowed 
             | Some old ->
                 old.Delete()
                 ctxt.Public.ToolLog.Create(false, DateTime.Now, toolCardId, tool.ToolId, userCardId, user.UserId) |> ignore
-                CheckedOut
+                Returned
         do! ctxt.SubmitUpdatesAsync()
         return v
     }

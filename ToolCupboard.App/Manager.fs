@@ -18,15 +18,16 @@ type Manager(wnd: PageWindow, debug) =
     member val CardManager = cardManager with get
 
     member this.CardInserted(obj, args : CardEventArgs) = 
+        let cardId = args.CardId
         async {
             do! Async.SwitchToContext(syncContext)
 
-            let popup = wnd.PopupMessageBox("Detected Card...", false)
+            let popup = wnd.PopupMessageBox("Detected Card...", autoFade=false)
 
-            let! log = AccessLog.LogAsync None args.CardId |> Async.StartChild
+            let! log = AccessLog.LogAsync None cardId |> Async.StartChild
             // look up if it was a tool or a user
-            let! user = Users.LookupUserAsync None args.CardId |> Async.StartChild
-            let! tool = Tools.LookupToolAsync None args.CardId |> Async.StartChild
+            let! user = Users.LookupUserAsync None cardId |> Async.StartChild
+            let! tool = Tools.LookupToolAsync None cardId |> Async.StartChild
 
             let page = wnd.PageControl.Content :?> ICardHandler
 
@@ -36,11 +37,13 @@ type Manager(wnd: PageWindow, debug) =
                 let! tool = tool
                 match tool with
                 | None -> 
-                    popup.SetText "Unknown Card"
-                    popup.StartFade()
-                | Some tool -> popup.SetText "Tool"
+                    do! page.HandleUnknown cardId popup
+                | Some tool ->
+                    do! page.HandleTool tool cardId popup
             | Some user -> 
-                page.HandleUser user popup
+                let! log = Users.LogUserAsync None user cardId |> Async.StartChild
+                do! page.HandleUser user cardId popup
+                do! log
 
             do! log
         } |> fun v -> Async.StartImmediate(v)

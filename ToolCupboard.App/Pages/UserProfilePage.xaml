@@ -1,38 +1,41 @@
 <ui:Page
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:vm="clr-namespace:ToolCupboard.UIHelpers.ViewModels;assembly=ToolCupboard.UIHelpers"
+    xmlns:vm="clr-namespace:ToolCupboard.App.ViewModels;assembly=ToolCupboard.App"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="clr-namespace:ToolCupboard.UIHelpers.Controls;assembly=ToolCupboard.UIHelpers"
     mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="800"
-    x:Class="ToolCupboard.UIHelpers.App.UserProfilePage"
+    x:Class="ToolCupboard.App.Pages.UserProfilePage"
     Title="Tool Cupboard - User Profile">
 
+    <!--
     <Design.DataContext>
         <vm:UserProfileViewModel />
     </Design.DataContext>
+    -->
 
     <ui:Page.DataTemplates>
         <DataTemplate DataType="{x:Type vm:ToolViewModel}">
-            <TextBlock Text="{Binding Name}" />
+            <TextBlock Classes="h3" Text="{Binding Name}" />
         </DataTemplate>
     </ui:Page.DataTemplates>
 
     <Grid RowDefinitions="auto,*">
         <StackPanel Orientation="Horizontal">
             <Border Background="Gray" Padding="10" Margin="10">
-                <Image Width="100" Height="100" />
+                <ui:Gravatar Width="100" Height="100" Email="{Binding Email}" />
+                <!-- <Image Name="ProfilePictureImage" Width="100" Height="100" Source="{Binding ProfilePicture}" /> -->
             </Border>
             <StackPanel Margin="20">
                 <TextBlock Classes="h1" Text="Welcome," HorizontalAlignment="Left"/>
-                <TextBlock Classes="h1" Text="{Binding Name}" HorizontalAlignment="Left"/>
+                <TextBlock Classes="h1" Text="{Binding Path=Name}" HorizontalAlignment="Left"/>
             </StackPanel>
         </StackPanel>
 
         <StackPanel Grid.Row="1" Margin="5">
             <TextBlock Classes="h3" Margin="5" Text="Borrowed items:" />
-            <ListBox Margin="5" Items="{Binding Tools}" />
+            <ListBox Margin="10" Items="{Binding Tools}" BorderThickness="0" />
         </StackPanel>
     </Grid>
 </ui:Page>

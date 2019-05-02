@@ -21,5 +21,5 @@ type PageWindow () as this =
     member this.Navigate(target) =
         this.PageControl.Navigate(target)
 
-    member this.PopupMessageBox(msg) =
-        this.PageControl.PopupMessageBox(msg)
+    member this.PopupMessageBox(msg, ?autoFade) =
+        this.PageControl.PopupMessageBox(msg, autoFade |> Option.defaultValue true)

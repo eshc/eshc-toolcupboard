@@ -7,7 +7,7 @@ open ToolCupboard.App.Pages
 open ToolCupboard.UIHelpers.Views
 
 let appmain debug (app : Application) (argv : string []) : unit =
-    let wnd = PageWindow()
+    let wnd = PageWindow(Width=480.0,Height=800.0)
     wnd.Navigate(Pages.LockedPage())
     let mgr = Manager(wnd, debug)
     mgr.Initialize()
@@ -19,7 +19,7 @@ let appmain debug (app : Application) (argv : string []) : unit =
 [<EntryPoint>]
 let main argv =
     let _ = ToolCupboard.UIHelpers.Controls.PopupControl.DelayProperty
-    let debug = true
+    let debug = false
     let app = App()
     let appmain = appmain debug |> fun v -> AppBuilderBase<AppBuilder>.AppMainDelegate(v)
     AppBuilder.Configure(app)
