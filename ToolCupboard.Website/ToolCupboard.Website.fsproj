@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <MvcRazorCompileOnPublish>true</MvcRazorCompileOnPublish>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ToolCupboard.Common\ToolCupboard.Common.fsproj" />
+    <ProjectReference Include="..\ToolCupboard.LDAP\ToolCupboard.LDAP.fsproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Services/ILdapService.fs" />
+    <Compile Include="Services/LdapService.fs" />
+    <Compile Include="Models/ErrorViewModel.fs" />
+    <Compile Include="Models/LoginModel.fs" />
+    <Compile Include="Controllers/HomeController.fs" />
+    <Compile Include="Startup.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+</Project>
