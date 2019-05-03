@@ -16,6 +16,7 @@
     <Compile Include="Services/ILdapService.fs" />
     <Compile Include="Services/LdapService.fs" />
     <Compile Include="Models/ErrorViewModel.fs" />
+    <Compile Include="Models/UnknownCardsModel.fs" />
     <Compile Include="Models/LoginModel.fs" />
     <Compile Include="Controllers/AuthController.fs" />
     <Compile Include="Controllers/HomeController.fs" />

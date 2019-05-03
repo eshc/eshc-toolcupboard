@@ -4,6 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Provider.fs" />
+    <Compile Include="AccessLog.fsi" />
     <Compile Include="AccessLog.fs" />
     <Compile Include="Users.fsi" />
     <Compile Include="Users.fs" />

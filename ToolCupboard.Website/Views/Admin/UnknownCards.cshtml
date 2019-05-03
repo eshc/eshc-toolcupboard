@@ -1,3 +1,4 @@
+@model UnknownCardsModel
 @{
     ViewData["Title"] = "Unknown Cards";
 }
@@ -9,19 +10,21 @@
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>Date</th>
+            <th>Last Date</th>
             <th>Card Id</th>
             <th></th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>Now</td>
-            <td>Some Id</td>
-            <th>Create Tool</th>
-            <th>Create User</th>
-        </tr>
+        @foreach (var card in Model.Cards) {
+            <tr>
+                <td>@card.LastDate</td>
+                <td>@card.CardId</td>
+                <th>Create Tool</th>
+                <th>Create User</th>
+            </tr> 
+        }
     </tbody>
 </table>
 
