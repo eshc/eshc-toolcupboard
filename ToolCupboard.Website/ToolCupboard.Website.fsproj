@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ToolCupboard.Common\ToolCupboard.Common.fsproj" />
+    <ProjectReference Include="..\ToolCupboard.Database\ToolCupboard.Database.fsproj" />
     <ProjectReference Include="..\ToolCupboard.LDAP\ToolCupboard.LDAP.fsproj" />
   </ItemGroup>
 
@@ -16,7 +17,9 @@
     <Compile Include="Services/LdapService.fs" />
     <Compile Include="Models/ErrorViewModel.fs" />
     <Compile Include="Models/LoginModel.fs" />
+    <Compile Include="Controllers/AuthController.fs" />
     <Compile Include="Controllers/HomeController.fs" />
+    <Compile Include="Controllers/AdminController.fs" />
     <Compile Include="Startup.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

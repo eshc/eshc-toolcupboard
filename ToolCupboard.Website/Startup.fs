@@ -1,15 +1,15 @@
 ﻿namespace ToolCupboard.Website
 
 open System
-open System.Collections.Generic
-open System.Linq
-open System.Threading.Tasks
+open Microsoft.AspNetCore.Authorization
+open Microsoft.AspNetCore.Authentication.Cookies
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
-open Microsoft.AspNetCore.HttpsPolicy;
+open Microsoft.AspNetCore.Http
 open Microsoft.AspNetCore.Mvc
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
+open ToolCubpoard.Website.Services
 
 type Startup private () =
     new (configuration: IConfiguration) as this =
@@ -19,6 +19,24 @@ type Startup private () =
     // This method gets called by the runtime. Use this method to add services to the container.
     member this.ConfigureServices(services: IServiceCollection) =
         // Add framework services.
+        services.AddSingleton<ILdapService, LdapService>() |> ignore
+
+        services.Configure<CookiePolicyOptions>(fun (options : CookiePolicyOptions) -> 
+                options.CheckConsentNeeded <- (fun v -> false)
+                options.MinimumSameSitePolicy <- SameSiteMode.Strict
+            ) |> ignore
+
+
+        services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(fun opts ->
+                opts.LoginPath <- PathString("/Auth/Login")
+                opts.LogoutPath <- PathString("/Auth/Logout"))
+            |> ignore
+
+        services.AddAuthorization(fun opts ->
+            opts.AddPolicy("AdminOnly", AuthorizationPolicyBuilder().RequireClaim("ToolAdmin", "True").Build())
+        ) |> ignore
+
         services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2) |> ignore
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -33,6 +51,11 @@ type Startup private () =
 
         app.UseHttpsRedirection() |> ignore
         app.UseStaticFiles() |> ignore
+        
+        app
+            .UseAuthentication()
+            .UseCookiePolicy()
+        |> ignore
 
         app.UseMvc(fun routes ->
             routes.MapRoute(

@@ -8,9 +8,9 @@ type LdapService(config : IConfiguration) =
         LdapParameters(
             Host = config.["LDAP:Host"], 
             Port = int config.["LDAP:Port"],
-            RootDN = config.["LDAP:SearchBase"],
+            RootDN = config.["LDAP:RootDN"],
             ManagerCN = config.["LDAP:Bind:User"],
-            ManagerPW = config.["LDAP:Bind:Password"],
+            ManagerPW = config.["LDAP:Bind:Pass"],
             NameField = config.["LDAP:Properties:Name"],
             MemberOfField = config.["LDAP:Properties:MemberOf"],
             EmailField = config.["LDAP:Properties:Email"],
