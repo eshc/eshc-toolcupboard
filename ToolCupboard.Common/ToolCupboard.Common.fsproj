@@ -6,6 +6,8 @@
 
   <ItemGroup>
     <Compile Include="Format.fs" />
+    <Compile Include="Result.fs" />
+    <Compile Include="CompExpr.fs" />
     <Compile Include="Library.fs" />
   </ItemGroup>
 

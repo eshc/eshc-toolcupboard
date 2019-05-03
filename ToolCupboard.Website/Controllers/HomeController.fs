@@ -18,8 +18,6 @@ open Microsoft.AspNetCore.Mvc
 type HomeController (ldapService : ILdapService) =
     inherit Controller()
 
-    new () = new HomeController(LdapService())
-
     member this.Index () =
         this.View()
 
