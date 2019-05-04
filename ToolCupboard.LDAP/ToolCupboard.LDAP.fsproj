@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ToolCupboard.Common\ToolCupboard.Common.fsproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Novell.Directory.Ldap.NETStandard" Version="3.0.0-beta4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="LdapHelper.fs" />
+  </ItemGroup>
+
+</Project>

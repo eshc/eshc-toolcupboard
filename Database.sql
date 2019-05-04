@@ -17,7 +17,7 @@ CREATE TABLE public.access_log
   (
     access_id bigserial PRIMARY KEY NOT NULL,
     date timestamp NOT NULL,
-    "cardId" text NOT NULL
+    card_id text NOT NULL
   );
 ALTER TABLE public.access_log
   OWNER TO tool_catalogue;

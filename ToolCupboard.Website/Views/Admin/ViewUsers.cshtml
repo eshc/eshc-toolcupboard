@@ -1,0 +1,41 @@
+@model ViewUsersViewModel 
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Users</h1>
+</div>
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>User Id</th>
+            <th>Username</th>
+            <th>Name</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Users) {
+            <tr>
+                <td>@user.UserId</td>
+                <td>@user.Username</td>
+                <td>@user.Name</td>
+                <th>@Html.ActionLink("Edit", "EditUser", "Admin", new { id = user.UserId }, new { @class = "btn btn-outline-primary btn-sm" })</th>
+            </tr> 
+        }
+    </tbody>
+</table>
+
+<form class="form-horizontal" asp-action="LoadLdapUser" method="post">
+  <div class="form-group row">
+    <label class="col-sm-offset-2 col-form-label col-sm-2" for="Username">Username or E-mail:</label>
+    <div class="col-sm-3">
+        <input type="text" name="username" class="form-control" placeholder="Enter username/e-mail" />
+    </div>
+    <div class="col-sm-2">
+      <input type="submit" class="btn btn-outline-success" value="Load from LDAP" />
+    </div>
+  </div>
+</form>

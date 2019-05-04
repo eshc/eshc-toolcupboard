@@ -53,3 +53,16 @@ let BorrowOrReturnToolAsync ctxt (tool:Tool) (user:User) toolCardId userCardId =
         do! ctxt.SubmitUpdatesAsync()
         return v
     }
+
+let GetToolAsync ctxt id =
+    async {
+        let ctxt = Option.defaultWith (Db.GetDataContext) ctxt
+        let q = 
+            query {
+                for tool in ctxt.Public.Tools do
+                where (tool.ToolId = id)
+                select tool
+                exactlyOneOrDefault
+            } |> Option.ofObj
+        return q
+    }

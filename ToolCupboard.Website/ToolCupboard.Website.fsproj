@@ -16,6 +16,10 @@
     <Compile Include="Services/ILdapService.fs" />
     <Compile Include="Services/LdapService.fs" />
     <Compile Include="Models/ErrorViewModel.fs" />
+    <Compile Include="Models/EditUserViewModel.fs" />
+    <Compile Include="Models/ToolViewModel.fs" />
+    <Compile Include="Models/ViewToolsViewModel.fs" />
+    <Compile Include="Models/ViewUsersViewModel.fs" />
     <Compile Include="Models/UnknownCardsModel.fs" />
     <Compile Include="Models/LoginModel.fs" />
     <Compile Include="Controllers/AuthController.fs" />

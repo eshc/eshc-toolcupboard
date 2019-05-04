@@ -1,0 +1,28 @@
+@model ViewToolsViewModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Tools</h1>
+</div>
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Tool Id</th>
+            <th>Name</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tool in Model.Tools) {
+            <tr>
+                <td>@tool.ToolId</td>
+                <td>@tool.Name</td>
+                <th>@Html.ActionLink("Edit", "EditTool", "Admin", new { id = tool.ToolId }, new { @class = "btn btn-outline-primary btn-sm" })</th>
+            </tr> 
+        }
+    </tbody>
+</table>
+

@@ -23,5 +23,9 @@ type LdapService(config : IConfiguration) =
     member this.Authenticate user pass = 
         ldap.Authenticate user pass
 
+    member this.GetUserInfo user =
+        ldap.GetUserInfo user
+
     interface ILdapService with
         member this.Authenticate user pass = this.Authenticate user pass
+        member this.GetUserInfo user = this.GetUserInfo user

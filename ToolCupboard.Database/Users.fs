@@ -33,3 +33,16 @@ let LogUserAsync ctxt (user:User) cardId =
     let ctxt = Option.defaultWith (Db.GetDataContext) ctxt
     ctxt.Public.UserLog.Create(cardId, DateTime.Now, user.UserId) |> ignore
     ctxt.SubmitUpdatesAsync()
+
+let GetUserAsync ctxt id =
+    async {
+        let ctxt = Option.defaultWith (Db.GetDataContext) ctxt
+        let user = 
+            query {
+                for user in ctxt.Public.Users do
+                where (user.UserId = id)
+                select user
+                exactlyOneOrDefault
+            } |> Option.ofObj
+        return user
+    }
