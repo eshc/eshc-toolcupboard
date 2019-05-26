@@ -1,7 +1,7 @@
 namespace ToolCupboard.Website.Models
 
 open System.ComponentModel.DataAnnotations
-open ToolCupboard.Database.Tools
+open ToolCupboard.Database.Provider
 
 type ToolViewModel() =
     [<Required>]

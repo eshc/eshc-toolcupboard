@@ -2,7 +2,7 @@ namespace ToolCupboard.Website.Models
 
 open System
 open System.ComponentModel.DataAnnotations
-open ToolCupboard.Database.Users
+open ToolCupboard.Database.Provider
 
 type EditUserCardViewModel() =
     member val CardId = "" with get, set
@@ -10,6 +10,8 @@ type EditUserCardViewModel() =
     member val Description = "" with get, set
 
     member val Added = DateTime.Now with get, set
+
+    member val User = "" with get, set
 
 type EditUserViewModel() =
     member val UserId = 0L with get, set

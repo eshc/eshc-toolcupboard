@@ -5,7 +5,6 @@ open System.Linq
 open FSharp.Data.Sql
 open ToolCupboard.Database.Provider
 
-type AccessLog = Db.dataContext.``public.access_logEntity``
 
 type UnknownCard = {
     CardId : string;

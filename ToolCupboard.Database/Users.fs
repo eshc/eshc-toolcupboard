@@ -4,9 +4,6 @@ open System
 open FSharp.Data.Sql
 open ToolCupboard.Database.Provider
 
-type User = Db.dataContext.``public.usersEntity``
-type Tool = Db.dataContext.``public.toolsEntity``
-
 let LookupUserAsync ctxt cardId =
     let ctxt = Option.defaultWith (Db.GetDataContext) ctxt
     query {
@@ -45,4 +42,19 @@ let GetUserAsync ctxt id =
                 exactlyOneOrDefault
             } |> Option.ofObj
         return user
+    }
+
+let DeleteUserCardAsync ctxt id =
+    async {
+        let ctxt = Option.defaultWith (Db.GetDataContext) ctxt
+        let card = 
+            query {
+                for card in ctxt.Public.UserCards do
+                where (card.CardId = id)
+                select card
+                exactlyOneOrDefault
+            } |> Option.ofObj
+        card |> Option.iter (fun c -> c.Delete ())
+        do! ctxt.SubmitUpdatesAsync()
+        return card
     }

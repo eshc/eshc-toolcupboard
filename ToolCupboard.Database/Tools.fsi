@@ -3,8 +3,6 @@ module ToolCupboard.Database.Tools
 open ToolCupboard.Database.Users
 open ToolCupboard.Database.Provider
 
-type Tool = Db.dataContext.``public.toolsEntity``
-type ToolCheckout = Db.dataContext.``public.tool_checkoutEntity``
 type BorrowOrReturnResult = Borrowed | Returned 
 
 val RegisterToolAsync : ctxt:Context -> cardId:string -> Async<Tool>

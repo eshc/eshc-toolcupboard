@@ -77,7 +77,7 @@ CREATE TABLE public.user_log
   (
     access_id bigserial PRIMARY KEY NOT NULL,
     user_id bigint NOT NULL REFERENCES users(user_id),
-    card_id text NOT NULL REFERENCES user_cards(card_id),
+    card_id text NOT NULL,
     date timestamp NOT NULL
   );
 ALTER TABLE public.user_log
@@ -88,9 +88,9 @@ CREATE TABLE public.tool_log
     access_id bigserial PRIMARY KEY NOT NULL,
     date timestamp NOT NULL,
     user_id bigint NOT NULL REFERENCES users(user_id),
-    user_card_id text NOT NULL REFERENCES user_cards(card_id),
+    user_card_id text NOT NULL,
     tool_id bigint NOT NULl REFERENCES tools(tool_id),
-    tool_card_id text NOT NULL REFERENCES tool_cards(card_id),
+    tool_card_id text NOT NULL,
     check_in boolean NOT NULl
   );
 ALTER TABLE public.tool_log

@@ -5,8 +5,6 @@ open FSharp.Data.Sql
 open ToolCupboard.Database.Users
 open ToolCupboard.Database.Provider
 
-type Tool = Db.dataContext.``public.toolsEntity``
-type ToolCheckout = Db.dataContext.``public.tool_checkoutEntity``
 type BorrowOrReturnResult = Borrowed | Returned 
 
 let RegisterToolAsync ctxt cardId = 

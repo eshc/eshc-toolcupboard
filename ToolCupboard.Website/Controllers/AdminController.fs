@@ -5,6 +5,7 @@ open FSharp.Data.Sql
 open Microsoft.AspNetCore.Mvc
 open Microsoft.AspNetCore.Authorization
 open ToolCupboard.Database
+open ToolCupboard.Database.Provider
 open ToolCupboard.Website.Models
 open ToolCubpoard.Website.Services
 
@@ -15,6 +16,21 @@ type IdRoute = {
 [<Authorize(Policy = "AdminOnly")>]
 type AdminController (ldapService : ILdapService) =
     inherit Controller()
+
+    member private this.ErrorUnknownUser(who : string) =
+        this.View("UnknownUserError", who) :> ActionResult
+
+    member private this.ErrorUnknownUserCard(cardId : string) =
+        this.View("UnknownUserCardError", id) :> ActionResult
+
+    member private this.RedirectToEditUser(userId) =
+        this.RedirectToAction("EditUser", { id = userId }) :> ActionResult
+
+    member private this.RedirectToEditTool(toolId) =
+        this.RedirectToAction("EditTool", { id = toolId }) :> ActionResult
+
+    member private this.RedirectToUnknownCards() =
+        this.RedirectToAction("UnknownCards") :> ActionResult
 
     member this.UnknownCards() =
         async {
@@ -28,6 +44,7 @@ type AdminController (ldapService : ILdapService) =
             let! tool = Tools.RegisterToolAsync None id
             return this.RedirectToAction("EditTool", { id = tool.ToolId })
         }
+
     member this.ViewTools() =
         let ctxt = Provider.Db.GetDataContext()
         async {
@@ -56,7 +73,6 @@ type AdminController (ldapService : ILdapService) =
     [<HttpPost>]
     member this.LoadLdapUser(username : string) =
         async {
-            eprintfn "username %A" username
             let ctxt = Provider.Db.GetDataContext()
             let! userId = 
                 query {
@@ -70,9 +86,9 @@ type AdminController (ldapService : ILdapService) =
                 | Result.Ok luser ->
                     let user = ctxt.Public.Users.Create(DateTime.Now, luser.email, luser.username, luser.displayName)
                     do! ctxt.SubmitUpdatesAsync()
-                    return this.RedirectToAction("EditUser", { id = user.UserId }) :> ActionResult
-                | Result.Error err -> return this.View("UnknownUserError", username) :> ActionResult
-            | Some user -> return this.RedirectToAction("EditUser", { id = user }) :> ActionResult
+                    return this.RedirectToEditUser (user.UserId)
+                | Result.Error err -> return this.ErrorUnknownUser(username)
+            | Some user -> return this.RedirectToEditUser (user)
         }
 
     member this.LdapSyncUser(id : int64) =
@@ -88,7 +104,7 @@ type AdminController (ldapService : ILdapService) =
                     user.Email <- luser.email
                     do! ctxt.SubmitUpdatesAsync()
                 | _ -> ()
-                return this.RedirectToAction("EditUser", { id = id }) :> ActionResult
+                return this.RedirectToEditUser (user.UserId)
         }
 
     member private this.EditUserNotFound(id : int64) = 
@@ -139,10 +155,93 @@ type AdminController (ldapService : ILdapService) =
                     return this.View(model)
         }
 
+    member this.AddUserCard(id : int64, cardid : string, description : string) =
+        async { 
+            let ctxt = Provider.Db.GetDataContext()
+            let! user = Users.GetUserAsync (Some ctxt) id
+            match user with 
+            | None -> return this.ErrorUnknownUser (string id)
+            | Some user ->
+                let card = ctxt.Public.UserCards.Create(DateTime.Now, description, id)
+                do! ctxt.SubmitUpdatesAsync()
+                return this.RedirectToEditUser(card.UserId)
+        }
+
+    member this.DeleteUserCard(id : string) =
+        async {
+            let! card = Users.DeleteUserCardAsync None id
+            match card with 
+            | None -> return this.ErrorUnknownUserCard(id)
+            | Some card -> return this.RedirectToEditUser(card.UserId)
+        }
+
+    member this.EditUserCard(id : string) =
+        async { 
+            let ctxt = Provider.Db.GetDataContext()
+            let card =
+                query { 
+                    for card in ctxt.Public.UserCards do
+                    where (card.CardId = id)
+                    select card
+                    exactlyOneOrDefault
+                } |> Option.ofObj
+            match card with
+            | Some card -> 
+                let user = 
+                    query {
+                        for user in card.``public.users by user_id`` do
+                        exactlyOne
+                    }
+                let vm = 
+                    EditUserCardViewModel(
+                        CardId = card.CardId, 
+                        Description = card.Description, 
+                        Added = card.Added,
+                        User = user.Login)
+                return this.View(vm) :> ActionResult
+            | None -> return this.ErrorUnknownUserCard(id)
+        }
+
+    [<HttpPost>]
+
+    member this.EditUserCard(id : string, model : EditUserCardViewModel) =
+        async {
+            let ctxt = Provider.Db.GetDataContext()
+            let user = 
+                query {
+                    for user in ctxt.Public.Users do
+                    where (user.Login = model.User || user.Email = model.User)
+                    select user
+                    headOrDefault
+                }
+            if isNull user 
+            then this.ModelState.AddModelError("User", "User does not exist.")
+            else model.User <- user.Login
+
+            if this.ModelState.IsValid then
+                let ctxt = Provider.Db.GetDataContext()
+                let card = 
+                    query {
+                        for card in ctxt.Public.UserCards do
+                        where (card.CardId = id)
+                        select (card)
+                        exactlyOneOrDefault
+                    } |> Option.ofObj
+                match card with
+                | None -> return this.ErrorUnknownUserCard(id)
+                | Some card ->
+                    card.Description <- model.Description
+                    card.UserId <- user.UserId
+                    do! ctxt.SubmitUpdatesAsync()
+                    return this.RedirectToAction("EditUser", { id = user.UserId }) :> ActionResult
+            else
+                return this.View(model) :> ActionResult
+        }
+
+
     member private this.EditToolNotFound(id : int64) = 
         this.ModelState.AddModelError("", sprintf "A tool with id %d does not exist." id)
         this.View()
-
 
     member this.EditTool(id : int64) =
         async {
@@ -168,4 +267,40 @@ type AdminController (ldapService : ILdapService) =
                     return this.View(model)
                 else
                     return this.View(model)
+        }
+
+    member this.LastCard() =
+        async { 
+            let ctxt = Provider.Db.GetDataContext()
+            let card = 
+                query {
+                    for c in ctxt.Public.AccessLog do
+                    sortByDescending c.Date
+                    select c
+                    headOrDefault
+                } |> Option.ofObj
+            match card with
+            | None -> return this.RedirectToUnknownCards()
+            | Some lastCard ->
+                let user = 
+                    query {
+                        for c in ctxt.Public.UserCards do
+                        where (c.CardId = lastCard.CardId)
+                        select c
+                        headOrDefault
+                    } |> Option.ofObj
+                match user with
+                | Some user -> return this.RedirectToEditUser (user.UserId)
+                | None ->
+                    let tool =
+                        query {
+                            for c in ctxt.Public.ToolCards do
+                            where (c.CardId = lastCard.CardId)
+                            select c
+                            headOrDefault
+                        } |> Option.ofObj
+                    match tool with
+                    | Some tool -> return this.RedirectToEditTool (tool.ToolId)
+                    | None -> return this.RedirectToUnknownCards()
+                
         }

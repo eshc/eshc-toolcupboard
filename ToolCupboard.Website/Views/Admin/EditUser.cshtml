@@ -34,7 +34,7 @@
   @Html.AntiForgeryToken()
 </form>
 
-<h2>User cards</h2>
+<h2>User Cards</h2>
 <table class="table table-striped table-hover">
     <thead>
         <tr>
@@ -58,3 +58,22 @@
         }
     </tbody>
 </table>
+
+<h3>Manually Add Card</h3>
+<form class="form-horizontal" asp-action="AddUserCard" method="post">
+  <input type="hidden" name="id" value="@Model.UserId" />
+  <div class="form-group row">
+    <label class="col-sm-offset-2 col-form-label col-sm-1" for="cardid">Card Id:</label>
+    <div class="col-sm-2">
+        <input type="text" name="cardid" class="form-control" placeholder="Enter Card Number" />
+    </div>
+    <label class="col-sm-offset-2 col-form-label col-sm-1" for="description">Description:</label>
+    <div class="col-sm-3">
+        <input type="text" name="description" class="form-control" placeholder="Enter Description" />
+    </div>
+    <div class="col-sm-2">
+      <input type="submit" class="btn btn-outline-success" value="Add" />
+    </div>
+  </div>
+</form>
+
