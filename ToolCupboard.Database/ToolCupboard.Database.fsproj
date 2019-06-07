@@ -3,6 +3,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ConnectionString.fs" />
     <Compile Include="Provider.fs" />
     <Compile Include="AccessLog.fsi" />
     <Compile Include="AccessLog.fs" />
