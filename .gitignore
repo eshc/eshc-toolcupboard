@@ -1,4 +1,4 @@
 bin
 obj
 .#*
-ToolCupboard.Database/Provider.fs
+ToolCupboard.Database/ConnectionString.fs
