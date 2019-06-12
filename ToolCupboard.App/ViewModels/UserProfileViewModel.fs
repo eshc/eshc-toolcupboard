@@ -1,8 +1,7 @@
 namespace ToolCupboard.App.ViewModels
 
 open Avalonia.Collections
-open ToolCupboard.Database.Users
-open ToolCupboard.Database.Tools
+open ToolCupboard.Database.Provider
 open ToolCupboard.UIHelpers.ViewModels
 
 type UserProfileViewModel(user : User, cardId : string, tools : seq<Tool>) =

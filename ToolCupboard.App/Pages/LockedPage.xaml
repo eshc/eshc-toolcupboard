@@ -12,7 +12,6 @@
         <TextBlock Classes="h1 center" Text="Locked" />
         <TextBlock Classes="h1 center" Text="-" />
         <TextBlock Classes="h1 center" Text="&lt;Tap card to enter&gt;" />
-        <Button><TextBlock Text="Text" /></Button>
     </StackPanel>
 </ui:Page>
 

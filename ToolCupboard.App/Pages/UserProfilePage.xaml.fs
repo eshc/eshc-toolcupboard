@@ -48,7 +48,7 @@ type UserProfilePage() as this =
         Async.StartImmediate(this.LoadAvatarAsync())
 
     interface ICardHandler with
-        member this.HandleUser user cardId popup =
+        member this.HandleUser mgr user cardId popup =
             async {
                 popup.SetText("Logging in...")
 
@@ -71,7 +71,7 @@ type UserProfilePage() as this =
                 popup.StartFade()
             }
 
-        member this.HandleTool tool cardId popup = 
+        member this.HandleTool mgr tool cardId popup = 
             async {
                 let! result = BorrowOrReturnToolAsync None tool this.User cardId this.ViewModel.CardId
 
@@ -90,9 +90,21 @@ type UserProfilePage() as this =
                 popup.StartFade()
             }
 
-        member this.HandleUnknown cardId popup =
+        member this.HandleUnknown mgr cardId popup =
             async {
                 popup.SetText(sprintf "Unknown card '%s'." cardId)
                 popup.SetError()
                 popup.StartFade()
+            }
+
+        member this.HandleDoorClosed mgr =
+            async {
+                this.PageControl |> Option.iter (fun pc -> 
+                    pc.GoBack()
+                )
+            }
+
+        member this.HandleDoorOpened mgr =
+            async {
+                do ()
             }

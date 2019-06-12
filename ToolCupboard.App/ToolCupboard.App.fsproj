@@ -44,6 +44,7 @@
     <ProjectReference Include="..\ToolCupboard.Common\ToolCupboard.Common.fsproj" />
     <ProjectReference Include="..\ToolCupboard.CardReader\ToolCupboard.CardReader.fsproj" />
     <ProjectReference Include="..\ToolCupboard.Database\ToolCupboard.Database.fsproj" />
+    <ProjectReference Include="..\ToolCupboard.Gpio\ToolCupboard.Gpio.fsproj" />
     <ProjectReference Include="..\ToolCupboard.UIHelpers\ToolCupboard.UIHelpers.fsproj" />
   </ItemGroup>
 </Project>

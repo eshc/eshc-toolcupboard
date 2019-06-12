@@ -3,6 +3,7 @@ namespace ToolCupboard.App
 open Avalonia.Threading
 open ToolCupboard.CardReader
 open ToolCupboard.Database
+open ToolCupboard.Gpio
 open ToolCupboard.UIHelpers.Views
 open Avalonia.Threading
 
@@ -15,6 +16,8 @@ type Manager(wnd: PageWindow, debug) =
         then Debug.CardManager() :> ICardManager
         else PCSC.CardManager() :> ICardManager
 
+    let gpioManager = GpioManager()
+    
     member val CardManager = cardManager with get
 
     member this.CardInserted(obj, args : CardEventArgs) = 
@@ -37,18 +40,39 @@ type Manager(wnd: PageWindow, debug) =
                 let! tool = tool
                 match tool with
                 | None -> 
-                    do! page.HandleUnknown cardId popup
+                    do! page.HandleUnknown gpioManager cardId popup
                 | Some tool ->
-                    do! page.HandleTool tool cardId popup
+                    do! page.HandleTool gpioManager tool cardId popup
             | Some user -> 
                 let! log = Users.LogUserAsync None user cardId |> Async.StartChild
-                do! page.HandleUser user cardId popup
+                do! page.HandleUser gpioManager user cardId popup
                 do! log
 
             do! log
         } |> fun v -> Async.StartImmediate(v)
 
+    member this.DoorOpened(obj) =
+        async {
+            printfn "Door opened"
+            do! Async.SwitchToContext(syncContext)
+
+            let page = wnd.PageControl.Content :?> ICardHandler
+            do! page.HandleDoorOpened gpioManager
+        } |> fun v -> Async.StartImmediate(v)
+
+    member this.DoorClosed(obj) =
+        async {
+            printfn "Door closed"
+            do! Async.SwitchToContext(syncContext)
+
+            let page = wnd.PageControl.Content :?> ICardHandler
+            do! page.HandleDoorClosed gpioManager
+        } |> fun v -> Async.StartImmediate(v)
+
     member this.Initialize() =
         this.CardManager.Initialize()
-
         this.CardManager.CardInserted.Add(this.CardInserted)
+
+        gpioManager.Initialize()
+        gpioManager.DoorOpened.Add(this.DoorOpened)
+        gpioManager.DoorClosed.Add(this.DoorClosed)

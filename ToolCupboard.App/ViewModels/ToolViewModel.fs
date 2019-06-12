@@ -1,6 +1,6 @@
 namespace ToolCupboard.App.ViewModels
 
-open ToolCupboard.Database.Tools
+open ToolCupboard.Database.Provider
 open ToolCupboard.UIHelpers.ViewModels
 
 type ToolViewModel(tool : Tool) =

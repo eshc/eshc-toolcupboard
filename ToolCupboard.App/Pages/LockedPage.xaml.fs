@@ -15,31 +15,44 @@ type LockedPage() as this =
         AvaloniaXamlLoader.Load(this)
 
     interface ICardHandler with
-        member this.HandleUser user cardId popup =
+        member this.HandleUser mgr user cardId popup =
             async {
                 popup.SetText("Logging in...")
 
                 let! tools = LookupUserToolsAsync None user
 
                 let dc = UserProfileViewModel(user, cardId, tools)
-                Option.iter (fun (pc : PageControl) -> 
+                match this.PageControl with
+                | Some pc ->
+                    printfn"Unlocking door"
+                    mgr.OpenDoor() |> fun v -> Async.Start(v)
                     pc.Navigate(UserProfilePage(DataContext = dc))
                     popup.SetText(sprintf "Logged in as %s." user.Name)
-                ) this.PageControl
+                | None -> ()
 
                 popup.StartFade()
             }
 
-        member this.HandleTool tool cardId popup = 
+        member this.HandleTool mgr tool cardId popup = 
             async {
                 popup.SetText("Not logged in yet.")
                 popup.SetError()
                 popup.StartFade()
             }
 
-        member this.HandleUnknown cardId popup =
+        member this.HandleUnknown mgr cardId popup =
             async {
                 popup.SetText(sprintf "Unknown card '%s'." cardId)
                 popup.SetError()
                 popup.StartFade()
+            }
+
+        member this.HandleDoorClosed mgr =
+            async {
+                do ()
+            }
+
+        member this.HandleDoorOpened mgr =
+            async {
+                do ()
             }

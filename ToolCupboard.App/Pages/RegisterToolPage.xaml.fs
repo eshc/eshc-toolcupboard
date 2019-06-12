@@ -16,7 +16,7 @@ type RegisterToolPage() as this =
         AvaloniaXamlLoader.Load(this)
 
     interface ICardHandler with
-        member this.HandleUser user cardId popup =
+        member this.HandleUser mgr user cardId popup =
             async {
                 popup.SetText("Logging in...")
 
@@ -32,18 +32,28 @@ type RegisterToolPage() as this =
                 popup.StartFade()
             }
 
-        member this.HandleTool tool cardId popup = 
+        member this.HandleTool mgr tool cardId popup = 
             async {
                 popup.SetText("This tool is already registered.")
                 popup.SetError()
                 popup.StartFade()
             }
 
-        member this.HandleUnknown cardId popup =
+        member this.HandleUnknown mgr cardId popup =
             async {
                 let! tool = RegisterToolAsync None cardId
                 popup.SetText(sprintf "Registered tool %d." tool.ToolId)
                 popup.SetError()
                 popup.StartFade()
                 this.PageControl |> Option.iter (fun pc  -> pc.GoBack())
+            }
+
+        member this.HandleDoorClosed mgr =
+            async {
+                do ()
+            }
+
+        member this.HandleDoorOpened mgr =
+            async {
+                do ()
             }
