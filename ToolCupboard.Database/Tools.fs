@@ -8,7 +8,7 @@ open ToolCupboard.Database.Provider
 type BorrowOrReturnResult = Borrowed | Returned 
 
 let RegisterToolAsync ctxt cardId = 
-    let ctxt = Option.defaultWith (Db.GetDataContext) ctxt
+    let ctxt = getContext ctxt
     let tool = ctxt.Public.Tools.Create("Unknown Tool", "Unknown Location", "Unknown Tool")
     async {
         do! ctxt.SubmitUpdatesAsync()
@@ -20,7 +20,7 @@ let RegisterToolAsync ctxt cardId =
     }
 
 let LookupToolAsync ctxt cardId =
-    let ctxt = Option.defaultWith (Db.GetDataContext) ctxt
+    let ctxt = getContext ctxt
     query {
         for t in ctxt.Public.ToolCards do
         where (t.CardId = cardId)
@@ -29,7 +29,7 @@ let LookupToolAsync ctxt cardId =
     } |> Seq.tryHeadAsync
 
 let BorrowOrReturnToolAsync ctxt (tool:Tool) (user:User) toolCardId userCardId =
-    let ctxt = Option.defaultWith (Db.GetDataContext) ctxt
+    let ctxt = getContext ctxt
     async {
         let! old = 
             query {
@@ -54,7 +54,7 @@ let BorrowOrReturnToolAsync ctxt (tool:Tool) (user:User) toolCardId userCardId =
 
 let GetToolAsync ctxt id =
     async {
-        let ctxt = Option.defaultWith (Db.GetDataContext) ctxt
+        let ctxt = getContext ctxt
         let q = 
             query {
                 for tool in ctxt.Public.Tools do
@@ -64,3 +64,19 @@ let GetToolAsync ctxt id =
             } |> Option.ofObj
         return q
     }
+
+let DeleteToolCardAsync ctxt id =
+    async {
+        let ctxt = getContext ctxt
+        let card = 
+            query {
+                for card in ctxt.Public.ToolCards do
+                where (card.CardId = id)
+                select card
+                exactlyOneOrDefault
+            } |> Option.ofObj
+        card |> Option.iter (fun c -> c.Delete ())
+        do! ctxt.SubmitUpdatesAsync()
+        return card
+    }
+

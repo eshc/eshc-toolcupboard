@@ -11,7 +11,7 @@ type Db =
         "ToolcupboardDatabase",
         ResolutionPath,
         1000,
-        true,
+        false,
         "public, admin, references">
 
 type Context = Db.dataContext option
@@ -19,7 +19,16 @@ type Context = Db.dataContext option
 type UserCard = Db.dataContext.``public.user_cardsEntity``
 type User = Db.dataContext.``public.usersEntity``
 type Tool = Db.dataContext.``public.toolsEntity``
+type ToolCard = Db.dataContext.``public.tool_cardsEntity``
 type ToolCheckout = Db.dataContext.``public.tool_checkoutEntity``
 type AccessLog = Db.dataContext.``public.access_logEntity``
 
-let getContext ctxt = Option.defaultWith (Db.GetDataContext) ctxt
+let defaultConnectionString : string option ref = ref None
+
+let makeContext () =
+    match !defaultConnectionString with
+    | None -> Db.GetDataContext()
+    | Some c -> Db.GetDataContext(c)
+
+let getContext ctxt = 
+    Option.defaultWith makeContext ctxt

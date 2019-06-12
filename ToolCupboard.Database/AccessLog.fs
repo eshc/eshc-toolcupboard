@@ -12,23 +12,25 @@ type UnknownCard = {
 }
 
 let LogAsync ctxt cardId =
-    let ctxt = Option.defaultWith Db.GetDataContext ctxt
+    let ctxt = getContext ctxt
     ctxt.Public.AccessLog.Create(cardId, DateTime.Now) |> ignore
     ctxt.SubmitUpdatesAsync()
   
 let LastUnknownCards ctxt (c:int) = 
-    let ctxt = Option.defaultWith Db.GetDataContext ctxt
+    let ctxt = getContext ctxt
     async {
-        let qusercards = query {
-            for card in ctxt.Public.UserCards do
-            select card.CardId
-            distinct
-        }
-        let qtoolcards = query {
-            for card in ctxt.Public.UserCards do
-            select card.CardId
-            distinct
-        }
+        let qusercards =    
+            query {
+                for card in ctxt.Public.UserCards do
+                select card.CardId
+                distinct
+            }
+        let qtoolcards = 
+            query {
+                for card in ctxt.Public.UserCards do
+                select card.CardId
+                distinct
+            }
         let! tools = 
             query {
                 for access in ctxt.Public.AccessLog do

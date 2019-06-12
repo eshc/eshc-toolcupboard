@@ -28,7 +28,9 @@ CREATE TABLE public.users
     login text NOT NULL,
     "name" text NOT NULL,
     "email" text NOT NULL,
-    added timestamp NOT NULL
+    added timestamp NOT NULL,
+    enabled boolean NOT NULL DEFAULT true,
+    note text NOT NULL DEFAULT ''
   );
 ALTER TABLE public.users
   OWNER TO tool_catalogue;

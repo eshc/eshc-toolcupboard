@@ -5,7 +5,7 @@ open FSharp.Data.Sql
 open ToolCupboard.Database.Provider
 
 let LookupUserAsync ctxt cardId =
-    let ctxt = Option.defaultWith (Db.GetDataContext) ctxt
+    let ctxt = getContext ctxt
     query {
         for t in ctxt.Public.UserCards do
         where (t.CardId = cardId)
@@ -14,7 +14,7 @@ let LookupUserAsync ctxt cardId =
     } |> Seq.tryHeadAsync
 
 let LookupUserToolsAsync ctxt (user:User) =
-    let ctxt = Option.defaultWith (Db.GetDataContext) ctxt
+    let ctxt = getContext ctxt
     async {
         let! tools = 
             query {
@@ -27,13 +27,13 @@ let LookupUserToolsAsync ctxt (user:User) =
     }
 
 let LogUserAsync ctxt (user:User) cardId = 
-    let ctxt = Option.defaultWith (Db.GetDataContext) ctxt
+    let ctxt = getContext ctxt
     ctxt.Public.UserLog.Create(cardId, DateTime.Now, user.UserId) |> ignore
     ctxt.SubmitUpdatesAsync()
 
 let GetUserAsync ctxt id =
     async {
-        let ctxt = Option.defaultWith (Db.GetDataContext) ctxt
+        let ctxt = getContext ctxt
         let user = 
             query {
                 for user in ctxt.Public.Users do
@@ -46,7 +46,7 @@ let GetUserAsync ctxt id =
 
 let DeleteUserCardAsync ctxt id =
     async {
-        let ctxt = Option.defaultWith (Db.GetDataContext) ctxt
+        let ctxt = getContext ctxt
         let card = 
             query {
                 for card in ctxt.Public.UserCards do
