@@ -12,6 +12,7 @@
         <tr>
             <th>Tool Id</th>
             <th>Name</th>
+            <th>Borrowed By</th>
             <th></th>
         </tr>
     </thead>
@@ -20,9 +21,9 @@
             <tr>
                 <td>@tool.ToolId</td>
                 <td>@tool.Name</td>
+                <td>@tool.BorrowedBy</td>
                 <th>@Html.ActionLink("Edit", "EditTool", "Admin", new { id = tool.ToolId }, new { @class = "btn btn-outline-primary btn-sm" })</th>
-            </tr> 
+            </tr>
         }
     </tbody>
 </table>
-

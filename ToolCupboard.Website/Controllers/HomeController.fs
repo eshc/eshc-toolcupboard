@@ -1,7 +1,7 @@
 ﻿namespace ToolCupboard.Website.Controllers
 
 open Microsoft.AspNetCore.Mvc
-open ToolCubpoard.Website.Services
+open ToolCupboard.Website.Services
 open Microsoft.AspNetCore.Http
 open System.Security.Claims
 open Microsoft.AspNetCore.Authorization

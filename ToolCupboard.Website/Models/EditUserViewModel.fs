@@ -25,6 +25,12 @@ type EditUserViewModel() =
     [<Required>]
     member val Email = "" with get, set
 
+    member val Enabled = false with get, set
+
+    member val LastUnknownCard = "" with get, set
+
+    member val Note = "" with get, set
+
     member val Cards : seq<EditUserCardViewModel> = Seq.empty with get, set
 
     static member OfUser (user : User) cards =
@@ -33,10 +39,18 @@ type EditUserViewModel() =
             Name = user.Name, 
             Username = user.Login,
             Email = user.Email,
-            Cards = cards)
+            Enabled = user.Enabled,
+            Cards = cards,
+            Note = user.Note)
 
     member this.UpdateUser(user : User) =
         user.Name <- this.Name
         user.Login <- this.Username
         user.Email <- this.Email
+        user.Enabled <- this.Enabled
+        user.Note <- 
+            if isNull this.Note then
+                ""
+            else
+                this.Note
 

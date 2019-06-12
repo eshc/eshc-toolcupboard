@@ -7,7 +7,7 @@ open Microsoft.AspNetCore.Authorization
 open ToolCupboard.Database
 open ToolCupboard.Database.Provider
 open ToolCupboard.Website.Models
-open ToolCubpoard.Website.Services
+open ToolCupboard.Website.Services
 
 type IdRoute = {
     id : int64
@@ -20,8 +20,14 @@ type AdminController (ldapService : ILdapService) =
     member private this.ErrorUnknownUser(who : string) =
         this.View("UnknownUserError", who) :> ActionResult
 
+    member private this.ErrorUnknownTool(who : string) =
+        this.View("UnknownToolError", who) :> ActionResult
+
     member private this.ErrorUnknownUserCard(cardId : string) =
         this.View("UnknownUserCardError", id) :> ActionResult
+
+    member private this.ErrorUnknownToolCard(cardId : string) =
+        this.View("UnknownToolCardError", id) :> ActionResult
 
     member private this.RedirectToEditUser(userId) =
         this.RedirectToAction("EditUser", { id = userId }) :> ActionResult
@@ -31,6 +37,45 @@ type AdminController (ldapService : ILdapService) =
 
     member private this.RedirectToUnknownCards() =
         this.RedirectToAction("UnknownCards") :> ActionResult
+
+    member private this.LastUnknownCard(ctxt) = 
+        async { 
+            let ctxt = getContext ctxt
+            let last =
+                query {
+                    for v in ctxt.Public.AccessLog do
+                    sortByDescending v.AccessId
+                    select v
+                }
+            let card = Seq.tryHead last
+            match card with 
+            | None -> return ""
+            | Some card ->
+                let hasToolCard = 
+                    query {
+                        for c in ctxt.Public.ToolCards do
+                        where (c.CardId = card.CardId)
+                        select c
+                    } |> Seq.tryHead |> Option.isSome
+                let hasUserCard = 
+                    query {
+                        for c in ctxt.Public.UserCards do
+                        where (c.CardId = card.CardId)
+                        select c
+                    } |> Seq.tryHead |> Option.isSome
+                if hasToolCard || hasUserCard 
+                then return "" 
+                else return card.CardId
+        }
+
+    member this.ToolBorrower(ctxt : Provider.Db.dataContext, toolId) =
+        query {
+            for ck in ctxt.Public.ToolCheckout do
+            join user in ctxt.Public.Users on (ck.UserId = user.UserId)
+            where (ck.ToolId = toolId)
+            select (user.Name)
+            headOrDefault 
+        }
 
     member this.UnknownCards() =
         async {
@@ -46,19 +91,23 @@ type AdminController (ldapService : ILdapService) =
         }
 
     member this.ViewTools() =
-        let ctxt = Provider.Db.GetDataContext()
+        let ctxt = Provider.makeContext ()
         async {
             let! tools = 
                 query {
                     for tool in ctxt.Public.Tools do
-                    select (ViewToolsToolViewModel(tool.ToolId, tool.Name))
+                    select (
+                        ViewToolsToolViewModel(
+                            tool.ToolId, 
+                            tool.Name,
+                            this.ToolBorrower(ctxt, tool.ToolId)))
                 } |> Seq.executeQueryAsync
             let vm = ViewToolsViewModel(tools)
             return this.View(vm)
         }
 
     member this.ViewUsers() =
-        let ctxt = Provider.Db.GetDataContext()
+        let ctxt = Provider.makeContext ()
         async {
             let! users = 
                 query {
@@ -73,7 +122,7 @@ type AdminController (ldapService : ILdapService) =
     [<HttpPost>]
     member this.LoadLdapUser(username : string) =
         async {
-            let ctxt = Provider.Db.GetDataContext()
+            let ctxt = Provider.makeContext ()
             let! userId = 
                 query {
                     for user in ctxt.Public.Users do
@@ -84,7 +133,14 @@ type AdminController (ldapService : ILdapService) =
             | None -> 
                 match ldapService.GetUserInfo(username) with
                 | Result.Ok luser ->
-                    let user = ctxt.Public.Users.Create(DateTime.Now, luser.email, luser.username, luser.displayName)
+                    let user = 
+                        ctxt.Public.Users.Create(
+                            added=DateTime.Now, 
+                            email=luser.email, 
+                            enabled=true, 
+                            note="",
+                            login=luser.username, 
+                            name=luser.displayName)
                     do! ctxt.SubmitUpdatesAsync()
                     return this.RedirectToEditUser (user.UserId)
                 | Result.Error err -> return this.ErrorUnknownUser(username)
@@ -93,7 +149,7 @@ type AdminController (ldapService : ILdapService) =
 
     member this.LdapSyncUser(id : int64) =
         async {
-            let ctxt = Provider.Db.GetDataContext()
+            let ctxt = Provider.makeContext ()
             let! user = Users.GetUserAsync (Some ctxt) id
             match user with
             | None -> return this.EditUserNotFound id :> ActionResult
@@ -124,6 +180,20 @@ type AdminController (ldapService : ILdapService) =
             return cards |> Seq.map (fun card -> 
                 EditUserCardViewModel(CardId = card.CardId, Description = card.Description, Added = card.Added))
         }
+
+    member private this.EditToolCards(ctxt, id : int64) =
+        async {
+            let ctxt = Provider.getContext ctxt
+            let! cards = 
+                query {
+                    for card in ctxt.Public.ToolCards do
+                    where (card.ToolId = id)
+                    select card
+                } |> Seq.executeQueryAsync
+
+            return cards |> Seq.map (fun card ->
+                EditToolCardViewModel(CardId = card.CardId, Description = card.Description, Added = card.Added))
+        }
  
     member this.EditUser(id : int64) =
         async {
@@ -133,19 +203,23 @@ type AdminController (ldapService : ILdapService) =
             | Some user -> 
                 let! cards = this.EditUserCards(None, id)
                 let vm = EditUserViewModel.OfUser user cards
+                let! lc = this.LastUnknownCard(None)
+                vm.LastUnknownCard <- lc
                 return this.View(vm)
         }
         
     [<HttpPost>]
     member this.EditUser(id : int64, model : EditUserViewModel) =
         async {
-            let ctxt = Provider.Db.GetDataContext()
+            let ctxt = Provider.makeContext ()
             let! user = Users.GetUserAsync (Some ctxt) id
             match user with
             | None -> return this.EditUserNotFound id
             | Some user -> 
-                let! cards = this.EditUserCards(None, id)
+                let! cards = this.EditUserCards(Some ctxt, id)
+                let! lc = this.LastUnknownCard(Some ctxt)
                 model.Cards <- cards
+                model.LastUnknownCard <- lc
                 model.UserId <- user.UserId
                 if this.ModelState.IsValid then
                     model.UpdateUser(user)
@@ -157,14 +231,28 @@ type AdminController (ldapService : ILdapService) =
 
     member this.AddUserCard(id : int64, cardid : string, description : string) =
         async { 
-            let ctxt = Provider.Db.GetDataContext()
+            let ctxt = Provider.makeContext ()
             let! user = Users.GetUserAsync (Some ctxt) id
             match user with 
             | None -> return this.ErrorUnknownUser (string id)
             | Some user ->
                 let card = ctxt.Public.UserCards.Create(DateTime.Now, description, id)
+                card.CardId <- cardid
                 do! ctxt.SubmitUpdatesAsync()
                 return this.RedirectToEditUser(card.UserId)
+        }
+
+    member this.AddToolCard(id : int64, cardid : string, description : string) =
+        async { 
+            let ctxt = Provider.makeContext ()
+            let! tool = Tools.GetToolAsync (Some ctxt) id
+            match tool with 
+            | None -> return this.ErrorUnknownTool (string id)
+            | Some tool ->
+                let card = ctxt.Public.ToolCards.Create(DateTime.Now, description, id)
+                card.CardId <- cardid
+                do! ctxt.SubmitUpdatesAsync()
+                return this.RedirectToEditTool(card.ToolId)
         }
 
     member this.DeleteUserCard(id : string) =
@@ -175,9 +263,10 @@ type AdminController (ldapService : ILdapService) =
             | Some card -> return this.RedirectToEditUser(card.UserId)
         }
 
+
     member this.EditUserCard(id : string) =
         async { 
-            let ctxt = Provider.Db.GetDataContext()
+            let ctxt = Provider.makeContext ()
             let card =
                 query { 
                     for card in ctxt.Public.UserCards do
@@ -203,10 +292,9 @@ type AdminController (ldapService : ILdapService) =
         }
 
     [<HttpPost>]
-
     member this.EditUserCard(id : string, model : EditUserCardViewModel) =
         async {
-            let ctxt = Provider.Db.GetDataContext()
+            let ctxt = Provider.makeContext ()
             let user = 
                 query {
                     for user in ctxt.Public.Users do
@@ -219,7 +307,6 @@ type AdminController (ldapService : ILdapService) =
             else model.User <- user.Login
 
             if this.ModelState.IsValid then
-                let ctxt = Provider.Db.GetDataContext()
                 let card = 
                     query {
                         for card in ctxt.Public.UserCards do
@@ -245,22 +332,33 @@ type AdminController (ldapService : ILdapService) =
 
     member this.EditTool(id : int64) =
         async {
-            let! tool = Tools.GetToolAsync None id
-            match tool with
-            | None -> return this.EditToolNotFound(id)
-            | Some tool ->
-                let vm = ToolViewModel.OfTool(tool)
-                return this.View(vm)
-        }
-
-    [<HttpPost>]
-    member this.EditTool(id : int64, model : ToolViewModel) =
-        async {
-            let ctxt = Provider.Db.GetDataContext()
+            let ctxt = Provider.getContext None
             let! tool = Tools.GetToolAsync (Some ctxt) id
             match tool with
             | None -> return this.EditToolNotFound(id)
             | Some tool ->
+                let! cards = this.EditToolCards(Some ctxt, id)
+                let! lc = this.LastUnknownCard(Some ctxt)
+                let vm = EditToolViewModel.OfTool tool cards
+                vm.BorrowedBy <- this.ToolBorrower(ctxt, tool.ToolId)
+                vm.LastUnknownCard <- lc
+                return this.View(vm)
+        }
+
+    [<HttpPost>]
+    member this.EditTool(id : int64, model : EditToolViewModel) =
+        async {
+            let ctxt = Provider.makeContext ()
+            let! tool = Tools.GetToolAsync (Some ctxt) id
+            match tool with
+            | None -> return this.EditToolNotFound(id)
+            | Some tool ->
+                let! cards = this.EditToolCards(None, id)
+                let! lc = this.LastUnknownCard(None)
+                model.Cards <- cards
+                model.LastUnknownCard <- lc
+                model.BorrowedBy <- this.ToolBorrower(ctxt, tool.ToolId)
+                model.ToolId <- tool.ToolId
                 if this.ModelState.IsValid then
                     model.UpdateTool(tool)
                     do! ctxt.SubmitUpdatesAsync()
@@ -269,9 +367,73 @@ type AdminController (ldapService : ILdapService) =
                     return this.View(model)
         }
 
+    member this.EditToolCard(id : string) =
+        async { 
+            let ctxt = Provider.makeContext ()
+            let card =
+                query { 
+                    for card in ctxt.Public.ToolCards do
+                    where (card.CardId = id)
+                    select card
+                    exactlyOneOrDefault
+                } |> Option.ofObj
+            match card with
+            | Some card ->
+                let vm = 
+                    EditToolCardViewModel(
+                        CardId = card.CardId, 
+                        Description = card.Description, 
+                        Added = card.Added,
+                        Tool = card.ToolId)
+                return this.View(vm) :> ActionResult
+            | None -> return this.ErrorUnknownUserCard(id)
+        }
+
+    [<HttpPost>]
+    member this.EditToolCard(id : string, model : EditToolCardViewModel) =
+        async {
+            let ctxt = Provider.makeContext ()
+            let tool = 
+                query {
+                    for tool in ctxt.Public.Tools do
+                    where (tool.ToolId = model.Tool)
+                    select tool
+                    headOrDefault
+                }
+            if isNull tool 
+            then this.ModelState.AddModelError("Tool", "Tool does not exist.")
+
+            if this.ModelState.IsValid then
+                let ctxt = Provider.makeContext ()
+                let card = 
+                    query {
+                        for card in ctxt.Public.ToolCards do
+                        where (card.CardId = id)
+                        select (card)
+                        exactlyOneOrDefault
+                    } |> Option.ofObj
+                match card with
+                | None -> return this.ErrorUnknownUserCard(id)
+                | Some card ->
+                    card.Description <- model.Description
+                    card.ToolId <- tool.ToolId
+                    do! ctxt.SubmitUpdatesAsync()
+                    return this.RedirectToEditTool(tool.ToolId)
+            else
+                return this.View(model) :> ActionResult
+        }
+
+    member this.DeleteToolCard(id : string) =
+        async {
+            let! card = Tools.DeleteToolCardAsync None id
+            match card with 
+            | None -> return this.ErrorUnknownToolCard(id)
+            | Some card -> return this.RedirectToEditTool(card.ToolId)
+        }
+
     member this.LastCard() =
         async { 
-            let ctxt = Provider.Db.GetDataContext()
+            let ctxt = Provider.makeContext ()
             let card = 
                 query {
                     for c in ctxt.Public.AccessLog do

@@ -1,4 +1,4 @@
-namespace ToolCubpoard.Website.Services
+namespace ToolCupboard.Website.Services
 
 open ToolCupboard.LDAP
 

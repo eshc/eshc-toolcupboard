@@ -9,7 +9,7 @@ open Microsoft.AspNetCore.Http
 open Microsoft.AspNetCore.Mvc
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
-open ToolCubpoard.Website.Services
+open ToolCupboard.Website.Services
 
 type Startup private () =
     new (configuration: IConfiguration) as this =
@@ -18,6 +18,9 @@ type Startup private () =
 
     // This method gets called by the runtime. Use this method to add services to the container.
     member this.ConfigureServices(services: IServiceCollection) =
+        ToolCupboard.Database.Provider.defaultConnectionString := 
+            this.Configuration.["Database:ConnectionString"] |> Option.ofObj
+
         // Add framework services.
         services.AddSingleton<ILdapService, LdapService>() |> ignore
 

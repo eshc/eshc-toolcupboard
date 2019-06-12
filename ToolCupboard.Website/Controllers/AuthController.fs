@@ -6,7 +6,7 @@ open Microsoft.AspNetCore.Authentication
 open Microsoft.AspNetCore.Authentication.Cookies
 open Microsoft.AspNetCore.Mvc
 open ToolCupboard.Website.Models
-open ToolCubpoard.Website.Services
+open ToolCupboard.Website.Services
 open System
 open ToolCupboard.LDAP
 

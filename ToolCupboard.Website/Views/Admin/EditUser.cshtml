@@ -27,6 +27,19 @@
     </div>
   </div>
   <div class="form-group row">
+    <label class="col-form-label col-sm-2" for="Enabled">Enabled:</label>
+    <div class="col-sm-10">
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <div class="input-group-text">
+            @Html.CheckBoxFor(m => m.Enabled)
+          </div>
+        </div>
+        @Html.TextBoxFor(m => m.Note, new { @class = "form-control", placeholder = "Note / reason" })
+      </div>
+    </div>
+  </div>
+  <div class="form-group row">
     <div class="col-sm-offset-2 col-sm-10">
       <button type="submit" class="btn btn-primary">Submit</button>
     </div>
@@ -58,6 +71,23 @@
         }
     </tbody>
 </table>
+
+<h3>Add Last Card</h3>
+@if (Model.LastUnknownCard == "") {
+  <p>Cannot add the last card.</p>
+} else {
+  <form class="form-horizontal" asp-action="AddUserCard" method="post">
+    <input type="hidden" name="id" value="@Model.UserId" />
+    <input type="hidden" name="cardid" value="@Model.LastUnknownCard" />
+    <div class="form-group row">
+      <label class="col-sm-offset-2 col-form-label col-sm-1" for="description">Description:</label>
+      <div class="col-sm-3">
+        <input type="text" name="description" class="form-control" placeholder="Enter Description" />
+      </div>
+        <input type="submit" class="btn btn-outline-success" value="Add" />
+    </div>
+  </form>
+}
 
 <h3>Manually Add Card</h3>
 <form class="form-horizontal" asp-action="AddUserCard" method="post">
